@@ -8,6 +8,7 @@ public class IntegerDivisionApp {
         Division division = new Division();
 
         System.out.println(division.makeDivision(78945, 4));
+        System.out.println(division.makeDivision(5, 423));
 
     }
 }
