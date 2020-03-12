@@ -7,8 +7,11 @@ public class IntegerDivisionApp {
 
         Division division = new Division();
 
-        System.out.println(division.makeDivision(78945, 4));
-        System.out.println(division.makeDivision(5, 423));
+
+
+
+        System.out.println(division.makeDivision(5, 42));
+        System.out.println(division.makeDivision(1, 1));
 
     }
 }

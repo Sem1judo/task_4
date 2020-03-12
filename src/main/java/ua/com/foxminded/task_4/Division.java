@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 public class Division {
 
     private static final  String DELIMITER = "";
-    private static final  String ONE_DECIMAL_PLACE = "#0.0";
+    private static final  String TWO_DECIMAL_PLACE = "#0.00";
     private static final  String NEW_LINE = "\n";
 
     private StringBuilder result = new StringBuilder();
@@ -22,7 +22,7 @@ public class Division {
         divisor = Math.abs(divisor);
 
         if (dividend < divisor) {
-            return "" + dividend + "/" + divisor +" = "+ new DecimalFormat(ONE_DECIMAL_PLACE).format((double)dividend/divisor);
+            return "" + dividend + "/" + divisor +" = "+ new DecimalFormat(TWO_DECIMAL_PLACE).format((double)dividend/divisor);
         }
 
         String[] digits = String.valueOf(dividend).split(DELIMITER);
