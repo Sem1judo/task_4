@@ -1,12 +1,10 @@
-package ua.com.foxminded.task_4;
-
-import java.text.DecimalFormat;
+package ua.com.foxminded.task_4.logic;
 
 public class Division {
 
-    private static final  String DELIMITER = "";
-    private static final  String TWO_DECIMAL_PLACE = "#0.00";
-    private static final  String NEW_LINE = "\n";
+    private static final String DELIMITER = "";
+    private static final String NEW_LINE = "\n";
+    private static final char NEW_LINE_CHAR = '\n';
 
     private StringBuilder result = new StringBuilder();
     private StringBuilder quotient = new StringBuilder();
@@ -16,19 +14,20 @@ public class Division {
 
         if (divisor == 0) {
             throw new IllegalArgumentException("Divisor cannot be 0, division by zero");
+        } else if ((divisor < 0) || (dividend < 0)) {
+            throw new IllegalArgumentException("Number cannot be negative");
+
         }
 
-        dividend = Math.abs(dividend);
-        divisor = Math.abs(divisor);
-
         if (dividend < divisor) {
-            return "" + dividend + "/" + divisor +" = "+ new DecimalFormat(TWO_DECIMAL_PLACE).format((double)dividend/divisor);
+            double res = (double) dividend/divisor;
+            return "" + dividend + "/" + divisor + " = " + res;
         }
 
         String[] digits = String.valueOf(dividend).split(DELIMITER);
         int reminderNumber;
         int multiplyResult;
-        int divisorDigit = calculateDigit(divisor);
+        int divisorDigit = divisor;
         Integer mod;
 
         for (int i = 0; i < digits.length; i++) {
@@ -45,20 +44,17 @@ public class Division {
                 String multiply = String.format("%" + (i + 2) + "d", multiplyResult);
                 result.append(multiply).append(NEW_LINE);
 
-                Integer tab = lastReminder.length() - calculateDigit(multiplyResult);
-                result.append(makeDivider(reminderNumber, tab)).append(NEW_LINE);
+                Integer fraction = lastReminder.length() - calculateDigit(multiplyResult);
+                result.append(getDivider(reminderNumber, fraction)).append(NEW_LINE);
 
                 quotient.append(reminderNumber / divisor);
 
                 reminder.replace(0, reminder.length(), mod.toString());
-                reminderNumber = Integer.parseInt(reminder.toString());
-            } else {
-                if (i >= divisorDigit) {
-                    quotient.append(0);
-                }
+                
+            } else  if (i >= divisorDigit) {
+                quotient.append(0);
             }
-
-            if (i == digits.length - 1) {
+             else if (i == digits.length - 1) {
                 result.append(String.format("%" + (i + 2) + "s", reminderNumber)).append(NEW_LINE);
             }
         }
@@ -66,37 +62,36 @@ public class Division {
         return result.toString();
     }
 
-    private String makeDivider(Integer reminderNumber, Integer tab) {
-        return assemblyString(tab, ' ') + assemblyString(calculateDigit(reminderNumber), '-');
+    private String getDivider(Integer reminderNumber, Integer borderLength) {
+        return lpad(borderLength, ' ') + lpad(calculateDigit(reminderNumber), '-');
     }
 
     private void modifyResultToView(Integer dividend, Integer divisor) {
         int[] index = new int[3];
-        for (int i = 0, j = 0; i < result.length(); i++) {
-            if (result.charAt(i) == '\n') {
-                index[j] = i;
-                j++;
+        for (int starerLine = 0, movingToEnd = 0; starerLine < result.length(); starerLine++) {
+                if (result.charAt(starerLine) == NEW_LINE_CHAR) {
+                index[movingToEnd] = starerLine;
+                movingToEnd++;
             }
-
-            if (j == 3) {
+            if (movingToEnd == 3) {
                 break;
             }
         }
 
-        int tab = calculateDigit(dividend) + 1 - index[0];
-        result.insert(index[2], assemblyString(tab, ' ') + "│" + quotient.toString());
-        result.insert(index[1], assemblyString(tab, ' ') + "│" + assemblyString(quotient.length(), '-'));
+        int borderLength = calculateDigit(dividend) + 1 - index[0];
+        result.insert(index[2], lpad(borderLength, ' ') + "│" + quotient.toString());
+        result.insert(index[1], lpad(borderLength, ' ') + "│" + lpad(quotient.length(), '-'));
         result.insert(index[0], "│" + divisor);
         result.replace(1, index[0], dividend.toString());
     }
 
-    private int calculateDigit(int i) {
-        return (int) Math.log10(i) + 1;
+    private int calculateDigit(int countDigit) {
+        return (int) Math.log10(countDigit) + 1;
     }
 
-    private String assemblyString(int numberOfSymbols, char symbol) {
+    private String lpad(int quantityOfSymbols, char symbol) {
         StringBuilder string = new StringBuilder();
-        for (int i = 0; i < numberOfSymbols; i++) {
+        for (int i = 0; i < quantityOfSymbols; i++) {
             string.append(symbol);
         }
         return string.toString();
