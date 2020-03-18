@@ -10,7 +10,8 @@ public class IntegerDivisionApp {
 
 
 
-        System.out.println(division.makeDivision(212, 10));
+        System.out.println(division.makeDivision( 12,6));
+
 
 
 

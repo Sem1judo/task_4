@@ -3,8 +3,6 @@ package ua.com.foxminded.task_4.logic;
 public class Division {
 
     private static final String DELIMITER = "";
-    private static final String NEW_LINE = "\n";
-    private static final char NEW_LINE_CHAR = '\n';
 
     private StringBuilder result = new StringBuilder();
     private StringBuilder quotient = new StringBuilder();
@@ -27,7 +25,6 @@ public class Division {
         String[] digits = String.valueOf(dividend).split(DELIMITER);
         int reminderNumber;
         int multiplyResult;
-        int divisorDigit = divisor;
         Integer mod;
 
         for (int i = 0; i < digits.length; i++) {
@@ -39,23 +36,23 @@ public class Division {
                 multiplyResult = reminderNumber / divisor * divisor;
 
                 String lastReminder = String.format("%" + (i + 2) + "s", "_" + reminderNumber);
-                result.append(lastReminder).append(NEW_LINE);
+                result.append(lastReminder).append("\n");
 
                 String multiply = String.format("%" + (i + 2) + "d", multiplyResult);
-                result.append(multiply).append(NEW_LINE);
+                result.append(multiply).append("\n");
 
                 Integer fraction = lastReminder.length() - calculateDigit(multiplyResult);
-                result.append(getDivider(reminderNumber, fraction)).append(NEW_LINE);
+                result.append(getDivider(reminderNumber, fraction)).append("\n");
 
                 quotient.append(reminderNumber / divisor);
 
                 reminder.replace(0, reminder.length(), mod.toString());
                 
-            } else  if (i >= divisorDigit) {
+            } else  if (i >= divisor) {
                 quotient.append(0);
             }
              else if (i == digits.length - 1) {
-                result.append(String.format("%" + (i + 2) + "s", reminderNumber)).append(NEW_LINE);
+                result.append(String.format("%" + (i + 2) + "s", reminderNumber)).append("\n");
             }
         }
         modifyResultToView(dividend, divisor);
@@ -68,12 +65,13 @@ public class Division {
 
     private void modifyResultToView(Integer dividend, Integer divisor) {
         int[] index = new int[3];
-        for (int starerLine = 0, movingToEnd = 0; starerLine < result.length(); starerLine++) {
-                if (result.charAt(starerLine) == NEW_LINE_CHAR) {
-                index[movingToEnd] = starerLine;
-                movingToEnd++;
+        int quantityPasses = 3;
+        for (int startLine = 0, counter = 0; startLine < result.length(); startLine++) {
+                if (result.charAt(startLine) == '\n') {
+                index[counter] = startLine;
+                counter++;
             }
-            if (movingToEnd == 3) {
+            if (counter == quantityPasses) {
                 break;
             }
         }
